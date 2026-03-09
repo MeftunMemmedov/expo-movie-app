@@ -1,14 +1,42 @@
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import {
+  createNativeStackNavigator,
+  NativeStackHeaderProps,
+} from "@react-navigation/native-stack";
 import { Genres, MovieDetails, MoviesByGenre, Search } from "../../../screens";
+import Header from "@/components/Header";
+import { Genre, GenreStackParams } from "@/types";
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<GenreStackParams>();
 
 const GenreStack = () => {
   return (
-    <Stack.Navigator screenOptions={{headerShown:false}}>
-      <Stack.Screen name="Genres" component={Genres} />
-      <Stack.Screen name="MoviesByGenre" component={MoviesByGenre} />
-      <Stack.Screen name="MovieDetails" component={MovieDetails} />
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Genres"
+        component={Genres}
+        options={{ header: () => <Header type="search" /> }}
+      />
+      <Stack.Screen
+        name="MoviesByGenre"
+        component={MoviesByGenre}
+        options={{
+          header: ({ route }: NativeStackHeaderProps) => {
+            const params = route.params as { genre: Genre };
+            return <Header type="back" title={params.genre.title} />;
+          },
+        }}
+      />
+
+      <Stack.Screen
+        name="MovieDetails"
+        component={MovieDetails}
+        options={{
+          header: ({ route }: NativeStackHeaderProps) => {
+            const params = route.params as { title: string; slug: string };
+            return <Header type="back" title={params.title} />;
+          },
+        }}
+      />
       <Stack.Screen name="Search" component={Search} />
     </Stack.Navigator>
   );

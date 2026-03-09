@@ -7,6 +7,8 @@ const Movies = () => {
     <Container scroll>
       <MovieSlider movies={MOVIES} title="NEW" />
       <MovieSlider movies={MOVIES} title="NEW" />
+      <MovieSlider movies={MOVIES} title="NEW" />
+      <MovieSlider movies={MOVIES} title="NEW" />
     </Container>
   );
 };

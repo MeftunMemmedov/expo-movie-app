@@ -41,6 +41,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     paddingHorizontal: 16,
     paddingTop: 20,
+    paddingBottom: 50,
     backgroundColor: main_black,
   },
 });

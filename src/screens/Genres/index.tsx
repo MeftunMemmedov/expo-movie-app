@@ -1,11 +1,83 @@
-import { View, Text } from 'react-native'
+import Container from "@/components/Container";
+import MovieSlider from "@/components/MovieSlider";
+import { secondary_black } from "@/constants/colors";
+import { GENRES } from "@/data/genre";
+import { MOVIES } from "@/data/movie";
+import { Genre, GenreStackParams } from "@/types";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { View, Text, FlatList, StyleSheet, Pressable } from "react-native";
 
-const Genres = () => {
+const GenreCard = ({
+  genre,
+  onPress,
+}: {
+  genre: Genre;
+  onPress: () => void;
+}) => {
   return (
-    <View>
-      <Text>Genres</Text>
+    <View style={styles.genreCardContainer}>
+      <Pressable style={styles.genreCard} onPress={onPress}>
+        <Text
+          style={[
+            styles.genreCardText,
+            { fontSize: genre.title.length > 20 ? 11 : 14 },
+          ]}
+        >
+          {genre.title}
+        </Text>
+      </Pressable>
     </View>
-  )
-}
+  );
+};
 
-export default Genres
+const Genres = ({
+  navigation,
+}: {
+  navigation: NativeStackNavigationProp<GenreStackParams>;
+}) => {
+  return (
+    <Container scroll>
+      <FlatList
+        data={GENRES}
+        renderItem={(genre) => (
+          <GenreCard
+            genre={genre.item}
+            onPress={() =>
+              navigation.navigate("MoviesByGenre", { genre: genre.item })
+            }
+          />
+        )}
+        keyExtractor={(genre, index) => `genre-${genre.slug}-${index}`}
+        numColumns={2}
+      />
+      <MovieSlider movies={MOVIES} title="Recommended" />
+    </Container>
+  );
+};
+
+export default Genres;
+
+const styles = StyleSheet.create({
+  genreCardContainer: {
+    width: "50%",
+    aspectRatio: "4/2",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  genreCard: {
+    width: "90%",
+    height: "100%",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 20,
+    backgroundColor: secondary_black,
+  },
+  genreCardText: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+});

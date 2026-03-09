@@ -1,11 +1,26 @@
-import { Movie } from "@/types";
-import { View, Text, Image, StyleSheet } from "react-native";
+import { Movie, StackParams } from "@/types";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { Image, StyleSheet, DimensionValue, Pressable } from "react-native";
 
-const MovieCard = ({ movie }: { movie: Movie }) => {
+const MovieCard = ({
+  movie,
+  marginRight = 0,
+  width = "auto",
+}: {
+  movie: Movie;
+  marginRight?: number;
+  width?: DimensionValue;
+}) => {
+  const nav = useNavigation<NavigationProp<StackParams>>();
   return (
-    <View style={styles.movieCard}>
+    <Pressable
+      style={[styles.movieCard, { marginRight, width }]}
+      onPress={() =>
+        nav.navigate("MovieDetails", { slug: movie.slug, title: movie.title })
+      }
+    >
       <Image source={{ uri: movie.poster }} style={styles.movieCardPoster} />
-    </View>
+    </Pressable>
   );
 };
 
@@ -13,8 +28,6 @@ export default MovieCard;
 
 export const styles = StyleSheet.create({
   movieCard: {
-    width: 100,
-    marginRight: 20,
     aspectRatio: "2/3",
     borderRadius: 8,
     overflow: "hidden",

@@ -49,6 +49,6 @@ export const createRandomMovie = (depth = 0): Movie => {
   };
 };
 
-export const MOVIES: Movie[] = Array.from({ length: 10 }, () =>
+export const MOVIES: Movie[] = Array.from({ length: 30 }, () =>
   createRandomMovie(),
 );
