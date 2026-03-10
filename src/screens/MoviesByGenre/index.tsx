@@ -1,5 +1,6 @@
 import Container from "@/components/Container";
 import MovieCard from "@/components/MovieCard";
+import MovieList from "@/components/MovieList";
 import { GENRES } from "@/data/genre";
 import { MOVIES } from "@/data/movie";
 import { GenreStackParams } from "@/types";
@@ -8,22 +9,11 @@ import { FlatList, StyleSheet, Text, View } from "react-native";
 
 const MoviesByGenre = ({
   route,
-  navigation,
 }: NativeStackScreenProps<GenreStackParams, "MoviesByGenre">) => {
   const { slug } = route.params.genre;
   return (
     <Container scroll={false}>
-      <FlatList
-        style={{ marginHorizontal: "auto" }}
-        data={MOVIES}
-        renderItem={(mov) => (
-          <View style={styles.movieCardContainer}>
-            <MovieCard movie={mov.item} width={"90%"} />
-          </View>
-        )}
-        keyExtractor={(mov, index) => `genre-${slug}-${mov.slug}-${index}`}
-        numColumns={3}
-      />
+      <MovieList movies={MOVIES} />
     </Container>
   );
 };

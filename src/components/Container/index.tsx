@@ -30,10 +30,21 @@ export default function Container({ children, scroll = true }: Props) {
     styles.container,
     { maxWidth: getMaxWidth(), width: "100%" },
   ];
-  if (scroll)
-    return <ScrollView style={containerStyles}>{children}</ScrollView>;
 
-  return <View style={containerStyles}>{children}</View>;
+  return (
+    <View style={{ backgroundColor: main_black }}>
+      {scroll ? (
+        <ScrollView
+          style={containerStyles}
+          showsVerticalScrollIndicator={false}
+        >
+          {children}
+        </ScrollView>
+      ) : (
+        <View style={containerStyles}>{children}</View>
+      )}
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({

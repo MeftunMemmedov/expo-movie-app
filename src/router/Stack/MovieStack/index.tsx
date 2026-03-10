@@ -1,8 +1,12 @@
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import {
+  createNativeStackNavigator,
+  NativeStackHeaderProps,
+} from "@react-navigation/native-stack";
 import { AllMovies, MovieDetails, Movies, Search } from "../../../screens";
 import Header from "../../../components/Header";
+import { MovieStackParams } from "@/types";
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<MovieStackParams>();
 
 const MovieStack = () => {
   return (
@@ -10,15 +14,23 @@ const MovieStack = () => {
       <Stack.Screen
         name="Movies"
         component={Movies}
-        options={{ header: () => <Header type="search"/> }}
+        options={{ header: () => <Header type="search" /> }}
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         name="AllMovies"
         component={AllMovies}
-        options={{ header: () => <Header type="search"/> }}
+        options={{ header: () => <Header type="search" /> }}
+      /> */}
+      <Stack.Screen
+        name="MovieDetails"
+        component={MovieDetails}
+        options={{ headerShown: false }}
       />
-      <Stack.Screen name="MovieDetails" component={MovieDetails}  />
-      <Stack.Screen name="Search" component={Search} />
+      <Stack.Screen
+        name="Search"
+        component={Search}
+        options={{ headerShown: false }}
+      />
     </Stack.Navigator>
   );
 };

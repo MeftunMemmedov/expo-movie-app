@@ -3,10 +3,13 @@ import MovieSlider from "@/components/MovieSlider";
 import { secondary_black } from "@/constants/colors";
 import { GENRES } from "@/data/genre";
 import { MOVIES } from "@/data/movie";
+import { getDevice } from "@/helpers/common";
 import { Genre, GenreStackParams } from "@/types";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { View, Text, FlatList, StyleSheet, Pressable } from "react-native";
 
+const isTablet = getDevice().tablet;
+const columns = isTablet ? 4 : 2;
 const GenreCard = ({
   genre,
   onPress,
@@ -38,6 +41,7 @@ const Genres = ({
   return (
     <Container scroll>
       <FlatList
+        scrollEnabled={false}
         data={GENRES}
         renderItem={(genre) => (
           <GenreCard
@@ -47,8 +51,8 @@ const Genres = ({
             }
           />
         )}
-        keyExtractor={(genre, index) => `genre-${genre.slug}-${index}`}
-        numColumns={2}
+        // keyExtractor={(genre, index) => `genre-${genre.slug}-${index}`}
+        numColumns={columns}
       />
       <MovieSlider movies={MOVIES} title="Recommended" />
     </Container>
@@ -59,7 +63,7 @@ export default Genres;
 
 const styles = StyleSheet.create({
   genreCardContainer: {
-    width: "50%",
+    width: `${100 / columns}%`,
     aspectRatio: "4/2",
     flexDirection: "row",
     justifyContent: "center",

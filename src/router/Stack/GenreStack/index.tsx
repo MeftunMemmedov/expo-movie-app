@@ -26,18 +26,22 @@ const GenreStack = () => {
           },
         }}
       />
-
       <Stack.Screen
         name="MovieDetails"
         component={MovieDetails}
-        options={{
-          header: ({ route }: NativeStackHeaderProps) => {
-            const params = route.params as { title: string; slug: string };
-            return <Header type="back" title={params.title} />;
-          },
-        }}
+        options={{ headerShown: false }}
+        // options={{
+        //   header: ({ route }: NativeStackHeaderProps) => {
+        //     const params = route.params as { title: string; slug: string };
+        //     return <Header type="back" title={params.title} />;
+        //   },
+        // }}
       />
-      <Stack.Screen name="Search" component={Search} />
+      <Stack.Screen
+        name="Search"
+        component={Search}
+        options={{ headerShown: false }}
+      />
     </Stack.Navigator>
   );
 };

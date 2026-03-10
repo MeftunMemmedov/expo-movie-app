@@ -4,19 +4,23 @@ import EvilIcons from "@expo/vector-icons/EvilIcons";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
 import { main_black, secondary_black } from "../../constants/colors";
-import { useNavigation } from "@react-navigation/native";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { StackParams } from "@/types";
 
 type Props =
   | { type: "search"; title?: never }
   | { type: "back"; title: string };
 
 const Header = ({ type, title }: Props) => {
-  const nav = useNavigation();
+  const nav = useNavigation<NavigationProp<StackParams>>();
   return (
     <View style={{ backgroundColor: main_black }}>
       {type == "search" && (
-        <View style={[styles.headerContainer, { height: 80 }]}>
-          <Pressable style={styles.headerSearchBtn}>
+        <View style={[styles.headerContainer, { height: 100 }]}>
+          <Pressable
+            style={styles.headerSearchBtn}
+            onPress={() => nav.navigate("Search")}
+          >
             <Text style={styles.headerSearchBtnPlaceholder}>
               Search for movie
             </Text>
@@ -25,7 +29,7 @@ const Header = ({ type, title }: Props) => {
         </View>
       )}
       {type === "back" && (
-        <View style={[styles.headerContainer, { height: 60 }]}>
+        <View style={[styles.headerContainer, { height: 80 }]}>
           <View style={styles.headerBack}>
             <Pressable
               style={styles.headerBackLeft}
