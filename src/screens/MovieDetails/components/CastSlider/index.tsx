@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet, FlatList, Image } from "react-native";
 import React from "react";
 import { Cast, Movie } from "@/types";
+import { createFakeImage } from "@/helpers/common";
 
 const CastSlider = ({ cast }: { cast: Cast[] }) => {
   return (
@@ -11,12 +12,15 @@ const CastSlider = ({ cast }: { cast: Cast[] }) => {
         renderItem={(artist) => (
           <View style={styles.slide}>
             <Image
-              source={{ uri: artist.item.actor.image }}
+              source={{
+                uri: artist.item.actor.image || createFakeImage(100, 100),
+              }}
               style={styles.slideImage}
             />
             <Text style={styles.slideArtistName}>
               {artist.item.actor.fullName}
             </Text>
+            <Text style={styles.slideCharacterName}>{artist.item.character}</Text>
           </View>
         )}
         keyExtractor={(cast, index) =>
@@ -51,6 +55,12 @@ export const styles = StyleSheet.create({
   slideArtistName: {
     color: "white",
     fontSize: 10,
+    textAlign: "center",
+    marginTop:2
+  },
+  slideCharacterName: {
+    color: "gray",
+    fontSize: 8,
     textAlign: "center",
   },
 });

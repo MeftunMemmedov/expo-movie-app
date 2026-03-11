@@ -1,13 +1,6 @@
-import {
-  Animated,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { MovieStackParams } from "@/types";
+import { Cast, Movie, MovieStackParams } from "@/types";
 import { MOVIES } from "@/data/movie";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
@@ -16,7 +9,10 @@ import { main_red, secondary_black } from "@/constants/colors";
 import MainInfo from "./components/MainInfo";
 import CastSlider from "./components/CastSlider";
 import MovieSlider from "@/components/MovieSlider";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import LoadingSpinner from "@/components/LoadingSpinner";
+import { getMovieDetails } from "@/api/helpers/movie";
+import WatchlistBtn from "./components/WatchlistBtn";
 
 const MovieDetails = ({
   route,
@@ -38,7 +34,30 @@ const MovieDetails = ({
     extrapolate: "clamp",
   });
 
-  const movie = MOVIES.find((mov) => mov.slug === slug);
+  const [movie, setMovie] = useState<Movie | null>(null);
+  const [cast, setCast] = useState<Cast[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
+
+  useEffect(() => {
+    const getCurrentMovie = async () => {
+      try {
+        setIsLoading(true);
+        const movieData = await getMovieDetails(slug);
+        if (!movieData) return;
+        const { movie: currentMovie, cast } = movieData;
+        setMovie(currentMovie);
+        setCast(cast);
+      } catch (error) {
+        setError("An error occured");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    getCurrentMovie();
+  }, []);
+
+  if (isLoading) return <LoadingSpinner />;
 
   if (!movie)
     return (
@@ -66,6 +85,7 @@ const MovieDetails = ({
             {movie.title}
           </Animated.Text>
         </View>
+        <View style={{ flex: 3 }}></View>
       </Animated.View>
       <Animated.ScrollView
         onScroll={Animated.event(
@@ -81,15 +101,13 @@ const MovieDetails = ({
             </Text>
           </View>
           <View style={styles.movieActionBtnsContainer}>
-            <Pressable style={styles.movieActionBtn}>
-              <Text style={styles.movieActionBtnText}>Add to Watchlist</Text>
-            </Pressable>
+            <WatchlistBtn movieId={movie.id} />
             <Pressable style={styles.movieActionBtn}>
               <Text style={styles.movieActionBtnText}>Watch Trailer</Text>
             </Pressable>
           </View>
           <View style={styles.movieDetailsAdditionalInfoList}>
-            <View style={styles.movieDetailsAdditionalInfoContainer}>
+            {/* <View style={styles.movieDetailsAdditionalInfoContainer}>
               <Text style={styles.movieDetailsAdditionalInfo}>
                 Directed by:{" "}
                 <Text style={styles.movieDetailsAdditionalInfoText}>
@@ -104,9 +122,9 @@ const MovieDetails = ({
                   {movie.age_rating}
                 </Text>
               </Text>
-            </View>
+            </View> */}
           </View>
-          <CastSlider cast={movie.cast} />
+          {cast.length && <CastSlider cast={cast} />}
           <MovieSlider movies={MOVIES} title="Recommended" />
         </Container>
       </Animated.ScrollView>
@@ -120,6 +138,7 @@ const styles = StyleSheet.create({
   movieDetailsHeader: {
     flexDirection: "row",
     alignItems: "flex-end",
+    justifyContent: "space-between",
     width: "100%",
     marginHorizontal: "auto",
     paddingHorizontal: 20,
@@ -131,8 +150,12 @@ const styles = StyleSheet.create({
     zIndex: 30,
   },
   headerBackLeft: { flex: 3 },
-  headerTitleContainer: { flex: 3 },
-  headerTitl: {},
+  headerTitleContainer: {
+    flex: 3,
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+  headerTitle: {},
 
   movieDetailsInfoDescriptionContainer: {
     backgroundColor: secondary_black,
@@ -150,6 +173,9 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     backgroundColor: main_red,
     borderRadius: 5,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
   },
   movieActionBtnText: {
     color: "white",

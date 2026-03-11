@@ -1,6 +1,5 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Account, AllMovies } from "../../screens";
-import { AllMovieStack, GenreStack, MovieStack } from "../Stack";
+import { AccountStack, AllMovieStack, GenreStack, MovieStack } from "../Stack";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { main_red, secondary_black } from "../../constants/colors";
@@ -58,8 +57,8 @@ const BottomTabsNavigator = () => {
         }}
       />
       <Tabs.Screen
-        name="Account"
-        component={Account}
+        name="AccountStack"
+        component={AccountStack}
         options={{
           tabBarIcon: ({ focused }) => (
             <FontAwesome

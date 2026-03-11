@@ -14,3 +14,7 @@ export type MovieStackParams = StackParams & {
   Movies: undefined;
   AllMovies: undefined;
 };
+
+export type AccountStackParams = StackParams & {
+  Account: undefined;
+};

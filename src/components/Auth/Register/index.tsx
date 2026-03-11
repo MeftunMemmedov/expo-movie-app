@@ -1,7 +1,13 @@
 import { main_red, secondary_black } from "@/constants/colors";
 import { View, Text, StyleSheet, Pressable, Dimensions } from "react-native";
 import Input from "../components/Input";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
+import { RegisterFormData, registerSchema } from "@/schemas/register.schema";
+import { Controller, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { AxiosError } from "axios";
+import { signUp } from "@/api/helpers/auth";
+import { createNewData } from "@/api/helpers";
 
 const { height } = Dimensions.get("screen");
 const Register = ({
@@ -9,15 +15,117 @@ const Register = ({
 }: {
   setCurrentForm: Dispatch<SetStateAction<"login" | "register">>;
 }) => {
+  const {
+    control,
+    handleSubmit,
+    setError,
+    formState: { errors, isSubmitting, isLoading, isSubmitSuccessful },
+  } = useForm<RegisterFormData>({
+    resolver: zodResolver(registerSchema),
+    defaultValues: { email: "", username: "", password: "" },
+  });
+
+  const onSubmit = async (data: RegisterFormData) => {
+    const { email, password, username } = data;
+    try {
+      const res = await signUp(email, password, { username });
+      if (!res.user) {
+        setError("root", { message: "User with this email already exists" });
+        return;
+      }
+      const userId = res.id;
+      const uname = res.user_metadata.username;
+      const e_mail = res.user_metadata.email;
+      await createNewData("profiles", {
+        id: userId,
+        userName: uname,
+        email: e_mail,
+      });
+      setCurrentForm("login");
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        const message = error?.response?.data.msg || "Register failed";
+        setError("root", { message });
+      }
+    }
+  };
   return (
     <View style={styles.screenContainer}>
       <View style={styles.formContainer}>
         <Text style={styles.formTitle}>Sign Up</Text>
-        <Input name="Username" onChange={() => {}} />
-        <Input name="Email" onChange={() => {}} />
-        <Input name="Password" onChange={() => {}} />
-        <Pressable style={styles.submitBtn}>
-          <Text style={styles.submitBtnText}>Sign Up</Text>
+        {/* {isSubmitSuccessful && (
+          <Text
+            style={{
+              color: "white",
+              backgroundColor: "#1bff0b00",
+              paddingHorizontal: 15,
+              paddingVertical: 5,
+              borderRadius: 5,
+              fontWeight: "bold",
+            }}
+          >
+            You have successfully signed up. Please check your email and verify
+            by link.
+          </Text>
+        )} */}
+        {errors.root && (
+          <Text
+            style={{
+              color: "white",
+              backgroundColor: "red",
+              paddingHorizontal: 15,
+              paddingVertical: 5,
+              borderRadius: 5,
+              fontWeight: "bold",
+            }}
+          >
+            {errors.root.message}
+          </Text>
+        )}
+        <Controller
+          control={control}
+          name="username"
+          render={({ field: { onChange, value } }) => (
+            <>
+              <Input name="Username" value={value} onChange={onChange} />
+              {errors.username && (
+                <Text style={{ color: "red" }}>{errors.username.message}</Text>
+              )}
+            </>
+          )}
+        />
+        <Controller
+          control={control}
+          name="email"
+          render={({ field: { onChange, value } }) => (
+            <>
+              <Input name="Email" value={value} onChange={onChange} />
+              {errors.email && (
+                <Text style={{ color: "red" }}>{errors.email.message}</Text>
+              )}
+            </>
+          )}
+        />
+        <Controller
+          control={control}
+          name="password"
+          render={({ field: { onChange, value } }) => (
+            <>
+              <Input name="Passwrd" value={value} onChange={onChange} />
+              {errors.password && (
+                <Text style={{ color: "red" }}>{errors.password.message}</Text>
+              )}
+            </>
+          )}
+        />
+        <Pressable
+          style={styles.submitBtn}
+          disabled={isLoading || isSubmitting}
+          onPress={handleSubmit(onSubmit)}
+        >
+          <Text style={styles.submitBtnText}>
+            {isLoading || isSubmitting ? "Loading" : "Sign Up"}
+          </Text>
         </Pressable>
         <View style={styles.textContainer}>
           <Text style={styles.text}>Have an account? Then </Text>
@@ -44,8 +152,7 @@ const styles = StyleSheet.create({
   },
   formContainer: {
     flexDirection: "column",
-    // borderWidth: 1,
-    // borderColor: "red",
+    gap: 10,
     width: 300,
   },
   formTitle: {
@@ -62,6 +169,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+    marginTop: 10,
   },
   submitBtnText: { color: "white", fontWeight: "bold" },
   textContainer: {

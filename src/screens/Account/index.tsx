@@ -1,24 +1,62 @@
+import { getDataList } from "@/api/helpers";
 import Auth from "@/components/Auth";
 import Container from "@/components/Container";
-import MovieCard from "@/components/MovieCard";
+import LoadingSpinner from "@/components/LoadingSpinner";
 import MovieList from "@/components/MovieList";
 import { main_red } from "@/constants/colors";
 import { MOVIES } from "@/data/movie";
+import { clearUser } from "@/store/global";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { WatchListMov } from "@/types";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Pressable, FlatList } from "react-native";
 
 const Account = () => {
-  const isAuth = true;
+  const dispatch = useAppDispatch();
+  const { user } = useAppSelector((store) => store.global);
+
+  const [watchlist, setWatchlist] = useState<WatchListMov[]>([]);
+  const [isWatchlistLoading, setIsWatchlistLoading] = useState<boolean>(false);
+  const logout = async () => {
+    await AsyncStorage.removeItem("auth");
+    dispatch(clearUser());
+  };
+
+  const getWatchlist = async () => {
+    try {
+      setIsWatchlistLoading(true);
+      const watchlist = await getDataList<WatchListMov>("mov_watchlist", {
+        select: "id,movieId,movie:movieId(*)",
+        userId: `eq.${user?.id}`,
+      });
+      setWatchlist(watchlist);
+    } catch {
+    } finally {
+      setIsWatchlistLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (user !== null) {
+      getWatchlist();
+    }
+  }, [user]);
   return (
     <Container scroll={false}>
-      {isAuth ? (
+      {user ? (
         <View>
           <View style={styles.accountHeader}>
             <View style={styles.accountHeaderInfo}>
-              <Text style={styles.accountHeaderName}>Name</Text>
-              <Text style={styles.accountHeaderEmail}>Email</Text>
+              <Text style={styles.accountHeaderName}>
+                {user.user_metadata.username}
+              </Text>
+              <Text style={styles.accountHeaderEmail}>
+                {user.user_metadata.email}
+              </Text>
             </View>
             <View style={styles.accountHeaderActions}>
-              <Pressable style={styles.accountHeaderLogoutBtn}>
+              <Pressable style={styles.accountHeaderLogoutBtn} onPress={logout}>
                 <Text style={styles.accountHeaderLogoutBtnText}>Log out</Text>
               </Pressable>
             </View>
@@ -27,7 +65,11 @@ const Account = () => {
             <View style={styles.tabsContainer}>
               <Text style={styles.watchlistTab}>Watchlist</Text>
             </View>
-            <MovieList movies={MOVIES} />
+            {isWatchlistLoading ? (
+              <LoadingSpinner />
+            ) : (
+              <MovieList movies={watchlist.map((wm) => wm.movie!)} />
+            )}
           </View>
         </View>
       ) : (

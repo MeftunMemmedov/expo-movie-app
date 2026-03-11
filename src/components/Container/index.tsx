@@ -15,7 +15,7 @@ interface Props {
 }
 
 export default function Container({ children, scroll = true }: Props) {
-  const { width } = useWindowDimensions();
+  const { width,height } = useWindowDimensions();
 
   const getMaxWidth = () => {
     if (width >= 1200) return 1140;

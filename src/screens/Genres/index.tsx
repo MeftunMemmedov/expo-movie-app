@@ -4,6 +4,7 @@ import { secondary_black } from "@/constants/colors";
 import { GENRES } from "@/data/genre";
 import { MOVIES } from "@/data/movie";
 import { getDevice } from "@/helpers/common";
+import { useAppSelector } from "@/store/hooks";
 import { Genre, GenreStackParams } from "@/types";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { View, Text, FlatList, StyleSheet, Pressable } from "react-native";
@@ -38,11 +39,12 @@ const Genres = ({
 }: {
   navigation: NativeStackNavigationProp<GenreStackParams>;
 }) => {
+  const { genres } = useAppSelector((store) => store.global);
   return (
     <Container scroll>
       <FlatList
         scrollEnabled={false}
-        data={GENRES}
+        data={genres}
         renderItem={(genre) => (
           <GenreCard
             genre={genre.item}

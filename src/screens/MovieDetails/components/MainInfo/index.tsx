@@ -7,12 +7,12 @@ import {
 } from "react-native";
 import React from "react";
 import { LinearGradient } from "expo-linear-gradient";
-import {MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Movie } from "@/types";
 import { useNavigation } from "@react-navigation/native";
 import { getDevice } from "@/helpers/common";
 
-const isTablet=getDevice().tablet
+const isTablet = getDevice().tablet;
 
 const MainInfo = ({ movie }: { movie: Movie }) => {
   const nav = useNavigation();
@@ -24,7 +24,7 @@ const MainInfo = ({ movie }: { movie: Movie }) => {
         resizeMode="cover"
         imageStyle={{ width: "100%", height: "100%" }}
         style={{
-          aspectRatio: isTablet?'16/9':"1/1",
+          aspectRatio: isTablet ? "16/9" : "1/1",
           width: "100%",
           position: "absolute",
           left: 0,
@@ -33,7 +33,6 @@ const MainInfo = ({ movie }: { movie: Movie }) => {
         }}
       />
       <View style={styles.movieDetilsContainer}>
-     
         <View style={styles.movieDetailsInfoContainer}>
           <LinearGradient
             colors={["rgba(20,20,20,0)", "rgba(20,20,20,0.999)"]}
@@ -65,14 +64,18 @@ const MainInfo = ({ movie }: { movie: Movie }) => {
                 color="white"
                 style={{ marginVertical: "auto" }}
               />
-              {movie.genres.map((genre) => (
-                <Text
-                  key={`genre-${genre}-of-${movie.title}`}
-                  style={styles.movieDetailsInfoGenre}
-                >
-                  {genre}
-                </Text>
-              ))}
+              <View
+                style={{ flexDirection: "row", alignItems: "center",}}
+              >
+                {movie.genres.map((genre) => (
+                  <Text
+                    key={`genre-${genre}-of-${movie.title}`}
+                    style={styles.movieDetailsInfoGenre}
+                  >
+                    {genre}
+                  </Text>
+                ))}
+              </View>
             </ScrollView>
           </View>
         </View>
@@ -87,7 +90,7 @@ const styles = StyleSheet.create({
   movieDetilsContainer: {},
 
   movieDetailsInfoContainer: {
-    aspectRatio: isTablet?'16/9':"1/1.2",
+    aspectRatio: isTablet ? "16/9" : "1/1",
     position: "relative",
   },
   movieDetailsInfoOverlayGradient: {
@@ -126,7 +129,7 @@ const styles = StyleSheet.create({
     fontWeight: 500,
   },
   movieDetailsInfoGenre: {
-    marginVertical: "auto",
+    // marginVertical: "auto",
     marginRight: 10,
     color: "white",
     fontWeight: "500",
