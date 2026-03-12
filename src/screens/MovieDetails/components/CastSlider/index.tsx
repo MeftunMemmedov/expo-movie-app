@@ -4,6 +4,7 @@ import { Cast, Movie } from "@/types";
 import { createFakeImage } from "@/helpers/common";
 
 const CastSlider = ({ cast }: { cast: Cast[] }) => {
+  if (!cast || cast.length == 0) return null;
   return (
     <View style={{ marginVertical: 30 }}>
       <Text style={styles.sliderTitle}>Cast</Text>
@@ -18,9 +19,11 @@ const CastSlider = ({ cast }: { cast: Cast[] }) => {
               style={styles.slideImage}
             />
             <Text style={styles.slideArtistName}>
-              {artist.item.actor.fullName}
+              {artist.item.actor.fullName ||""}
             </Text>
-            <Text style={styles.slideCharacterName}>{artist.item.character}</Text>
+            <Text style={styles.slideCharacterName}>
+              {artist.item.character}
+            </Text>
           </View>
         )}
         keyExtractor={(cast, index) =>
@@ -56,7 +59,7 @@ export const styles = StyleSheet.create({
     color: "white",
     fontSize: 10,
     textAlign: "center",
-    marginTop:2
+    marginTop: 2,
   },
   slideCharacterName: {
     color: "gray",

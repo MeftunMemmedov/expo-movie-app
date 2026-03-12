@@ -16,7 +16,10 @@ const MovieCard = ({
     <Pressable
       style={[styles.movieCard, { marginRight, width }]}
       onPress={() =>
+      {
         nav.navigate("MovieDetails", { slug: movie.slug, title: movie.title })
+        console.log("PRESS")
+      }
       }
     >
       <Image source={{ uri: movie.poster }} style={styles.movieCardPoster} />

@@ -9,7 +9,8 @@ import { clearUser } from "@/store/global";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { WatchListMov } from "@/types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useEffect, useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import { useCallback, useEffect, useState } from "react";
 import { View, Text, StyleSheet, Pressable, FlatList } from "react-native";
 
 const Account = () => {
@@ -37,11 +38,11 @@ const Account = () => {
     }
   };
 
-  useEffect(() => {
-    if (user !== null) {
+  useFocusEffect(
+    useCallback(() => {
       getWatchlist();
-    }
-  }, [user]);
+    }, []),
+  );
   return (
     <Container scroll={false}>
       {user ? (

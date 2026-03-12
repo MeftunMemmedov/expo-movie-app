@@ -56,7 +56,7 @@ const Genres = ({
         // keyExtractor={(genre, index) => `genre-${genre.slug}-${index}`}
         numColumns={columns}
       />
-      <MovieSlider movies={MOVIES} title="Recommended" />
+      {/* <MovieSlider movies={MOVIES} title="Recommended" /> */}
     </Container>
   );
 };

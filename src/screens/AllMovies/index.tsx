@@ -21,7 +21,7 @@ const AllMovies = () => {
     { length: currentYear - 1980 + 1 },
     (_, i) => `${1980 + i}`,
   );
-
+  const [searchInput, setSearchInput] = useState<string>("");
   const [movies, setMovies] = useState<Movie[]>([]);
   const [isFiltered, setIsFiltered] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -66,6 +66,7 @@ const AllMovies = () => {
     if (params.year) queryParams.year = `eq.${params.year}`;
     if (params.agerating) queryParams.age_rating = `eq.${params.agerating}`;
     if (params.imdb) queryParams.rating = `gte.${params.imdb}`;
+    if (searchInput !== "") queryParams.title = `ilike.%${searchInput.trim()}%`;
     if (reset === "reset") {
       queryParams = {};
       setIsFiltered(false);
@@ -98,7 +99,11 @@ const AllMovies = () => {
         <LoadingSpinner />
       ) : (
         <View>
-          <SearchInput onChange={() => {}} />
+          <SearchInput
+            onChange={(text) => {
+              setSearchInput(text);
+            }}
+          />
           <FlatList
             numColumns={2}
             data={Filters}

@@ -2,7 +2,7 @@ import { secondary_black } from "@/constants/colors";
 import { EvilIcons } from "@expo/vector-icons";
 import { View, Text, TextInput, StyleSheet } from "react-native";
 
-const SearchInput = ({ onChange }: { onChange: () => void }) => {
+const SearchInput = ({ onChange }: { onChange: (text:string) => void }) => {
   return (
     <View style={[styles.headerContainer, { height: 80 }]}>
       <TextInput

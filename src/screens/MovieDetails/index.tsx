@@ -13,6 +13,7 @@ import { useEffect, useRef, useState } from "react";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { getMovieDetails } from "@/api/helpers/movie";
 import WatchlistBtn from "./components/WatchlistBtn";
+import TrailerPlayer from "./components/TrailerPlayer";
 
 const MovieDetails = ({
   route,
@@ -35,9 +36,13 @@ const MovieDetails = ({
   });
 
   const [movie, setMovie] = useState<Movie | null>(null);
+  const [relatedMovies, setRelatedMovies] = useState<Movie[]>([]);
   const [cast, setCast] = useState<Cast[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
+
+  const [isTrailerPlayerActive, setIsTrailerPlayerActive] =
+    useState<boolean>(false);
 
   useEffect(() => {
     const getCurrentMovie = async () => {
@@ -45,9 +50,10 @@ const MovieDetails = ({
         setIsLoading(true);
         const movieData = await getMovieDetails(slug);
         if (!movieData) return;
-        const { movie: currentMovie, cast } = movieData;
+        const { movie: currentMovie, cast, relatedMovies } = movieData;
         setMovie(currentMovie);
         setCast(cast);
+        setRelatedMovies(relatedMovies);
       } catch (error) {
         setError("An error occured");
       } finally {
@@ -102,10 +108,19 @@ const MovieDetails = ({
           </View>
           <View style={styles.movieActionBtnsContainer}>
             <WatchlistBtn movieId={movie.id} />
-            <Pressable style={styles.movieActionBtn}>
+            <Pressable
+              style={styles.movieActionBtn}
+              onPress={() =>
+                setIsTrailerPlayerActive((prevState) => !prevState)
+              }
+            >
               <Text style={styles.movieActionBtnText}>Watch Trailer</Text>
             </Pressable>
           </View>
+          <TrailerPlayer
+            url={movie.trailer_url}
+            isTrailerPlayerActive={isTrailerPlayerActive}
+          />
           <View style={styles.movieDetailsAdditionalInfoList}>
             {/* <View style={styles.movieDetailsAdditionalInfoContainer}>
               <Text style={styles.movieDetailsAdditionalInfo}>
@@ -125,7 +140,7 @@ const MovieDetails = ({
             </View> */}
           </View>
           {cast.length && <CastSlider cast={cast} />}
-          <MovieSlider movies={MOVIES} title="Recommended" />
+          <MovieSlider movies={relatedMovies} title="Recommended" />
         </Container>
       </Animated.ScrollView>
     </>

@@ -3,7 +3,7 @@ import { getData, getDataList } from ".";
 
 export const getMovieDetails = async (
   slug: string,
-): Promise<{ movie: Movie; cast: Cast[] } | void> => {
+): Promise<{ movie: Movie; cast: Cast[]; relatedMovies: Movie[] } | void> => {
   const movie = await getData<Movie>("mov_movies", {
     slug: `eq.${slug}`,
     select: "*,director(*)",
@@ -15,6 +15,10 @@ export const getMovieDetails = async (
     movie_id: `eq.${movie.id}`,
     select: "*,actor:artist_id(*)",
   });
-
-  return { movie, cast };
+  const relatedMovies = await getDataList<Movie>("mov_movies", {
+    genres: `cs.{${movie.genres.slice(0, 2).join(",")}}`,
+    slug: `neq.${slug}`,
+  });
+  console.log(movie.genres.join(" , "));
+  return { movie, cast, relatedMovies };
 };

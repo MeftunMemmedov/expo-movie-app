@@ -6,6 +6,7 @@ import {
   TextInput,
   Pressable,
   Dimensions,
+  ActivityIndicator,
 } from "react-native";
 import Input from "../components/Input";
 import { Dispatch, SetStateAction } from "react";
@@ -18,9 +19,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getAuthState } from "@/store/global/actions";
 import { useAppDispatch } from "@/store/hooks";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
-import { MovieStackParams } from "@/types";
+// import { MovieStackParams } from "@/types";
 
-// "expires_at": 1773235846, "expires_in": 3600,
 
 const { height } = Dimensions.get("screen");
 const Login = ({
@@ -109,7 +109,11 @@ const Login = ({
           onPress={handleSubmit(onSubmit)}
         >
           <Text style={styles.submitBtnText}>
-            {isLoading || isSubmitting ? "Loading" : "Sign In"}
+            {isLoading || isSubmitting ? (
+              <ActivityIndicator size={10} color={"white"} />
+            ) : (
+              "Sign In"
+            )}
           </Text>
         </Pressable>
         <View style={styles.textContainer}>

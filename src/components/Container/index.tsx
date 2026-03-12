@@ -15,7 +15,7 @@ interface Props {
 }
 
 export default function Container({ children, scroll = true }: Props) {
-  const { width,height } = useWindowDimensions();
+  const { width, height } = useWindowDimensions();
 
   const getMaxWidth = () => {
     if (width >= 1200) return 1140;
@@ -28,7 +28,7 @@ export default function Container({ children, scroll = true }: Props) {
 
   const containerStyles: StyleProp<ViewStyle> = [
     styles.container,
-    { maxWidth: getMaxWidth(), width: "100%" },
+    { maxWidth: getMaxWidth(), minHeight: "100%", width: "100%" },
   ];
 
   return (
@@ -36,6 +36,7 @@ export default function Container({ children, scroll = true }: Props) {
       {scroll ? (
         <ScrollView
           style={containerStyles}
+          contentContainerStyle={{ paddingBottom: 100 }}
           showsVerticalScrollIndicator={false}
         >
           {children}

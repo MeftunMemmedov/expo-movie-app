@@ -25,14 +25,16 @@ const Register = ({
     defaultValues: { email: "", username: "", password: "" },
   });
 
+  const [successMessage, setSuccessMessage] = useState("");
+
   const onSubmit = async (data: RegisterFormData) => {
     const { email, password, username } = data;
     try {
       const res = await signUp(email, password, { username });
-      if (!res.user) {
-        setError("root", { message: "User with this email already exists" });
-        return;
-      }
+      // if (!res.user) {
+      //   setError("root", { message: "User with this email already exists" });
+      //   return;
+      // }
       const userId = res.id;
       const uname = res.user_metadata.username;
       const e_mail = res.user_metadata.email;
@@ -41,7 +43,12 @@ const Register = ({
         userName: uname,
         email: e_mail,
       });
-      setCurrentForm("login");
+      setSuccessMessage(
+        "You have successfully signed up. Please check your email and verify by link.",
+      );
+      setTimeout(() => {
+        setCurrentForm("login");
+      }, 5000);
     } catch (error) {
       if (error instanceof AxiosError) {
         const message = error?.response?.data.msg || "Register failed";
@@ -53,21 +60,21 @@ const Register = ({
     <View style={styles.screenContainer}>
       <View style={styles.formContainer}>
         <Text style={styles.formTitle}>Sign Up</Text>
-        {/* {isSubmitSuccessful && (
+        {successMessage && (
           <Text
             style={{
               color: "white",
-              backgroundColor: "#1bff0b00",
+              backgroundColor: secondary_black,
               paddingHorizontal: 15,
               paddingVertical: 5,
               borderRadius: 5,
               fontWeight: "bold",
+              textAlign: "center",
             }}
           >
-            You have successfully signed up. Please check your email and verify
-            by link.
+            {successMessage}
           </Text>
-        )} */}
+        )}
         {errors.root && (
           <Text
             style={{

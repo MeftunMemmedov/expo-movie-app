@@ -4,6 +4,7 @@ import { Movie } from "@/types";
 import MovieCard from "../MovieCard";
 
 const MovieSlider = ({ movies, title }: { movies: Movie[]; title: string }) => {
+  if(!movies || movies.length===0) return null
   return (
     <View style={{ marginBottom: 30 }}>
       <Text style={styles.sliderTitle}>{title}</Text>
