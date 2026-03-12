@@ -25,6 +25,7 @@ const SUCCESS: Status = { LOADING: false, SUCCESS: true, FAILURE: false };
 const FAILURE: Status = { LOADING: true, SUCCESS: false, FAILURE: true };
 
 interface StateProps {
+  isBottomTabVisible: boolean;
   genres: Genre[] | null;
   user: User | null;
   watchlist: WatchListMov[] | null;
@@ -38,6 +39,7 @@ interface StateProps {
 }
 
 const initialState: StateProps = {
+  isBottomTabVisible: true,
   genres: null,
   user: null,
   watchlist: null,
@@ -56,6 +58,9 @@ const globalSlice = createSlice({
   reducers: {
     clearUser: (state) => {
       state.user = null;
+    },
+    setIsBottomTabVisible: (state, action) => {
+      state.isBottomTabVisible = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -121,5 +126,5 @@ const globalSlice = createSlice({
   },
 });
 
-export const { clearUser } = globalSlice.actions;
+export const { clearUser, setIsBottomTabVisible } = globalSlice.actions;
 export default globalSlice.reducer;

@@ -4,7 +4,6 @@ import Container from "@/components/Container";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import MovieList from "@/components/MovieList";
 import { main_red } from "@/constants/colors";
-import { MOVIES } from "@/data/movie";
 import { clearUser } from "@/store/global";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { WatchListMov } from "@/types";
@@ -40,8 +39,9 @@ const Account = () => {
 
   useFocusEffect(
     useCallback(() => {
+      if (!user) return;
       getWatchlist();
-    }, []),
+    }, [user]),
   );
   return (
     <Container scroll={false}>

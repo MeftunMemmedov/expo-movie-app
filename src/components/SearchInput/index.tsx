@@ -2,18 +2,33 @@ import { secondary_black } from "@/constants/colors";
 import { EvilIcons } from "@expo/vector-icons";
 import { View, Text, TextInput, StyleSheet } from "react-native";
 
-const SearchInput = ({ onChange }: { onChange: (text:string) => void }) => {
+interface Props {
+  onChange: (text: string) => void;
+  inSearch: boolean;
+}
+
+const SearchInput = ({ onChange, inSearch = true }: Props) => {
   return (
-    <View style={[styles.headerContainer, { height: 80 }]}>
+    <View style={[styles.headerContainer, { height: 100 }]}>
       <TextInput
-        style={styles.headerSearchBtn}
+        style={[
+          styles.headerSearchBtn,
+          {
+            width: inSearch ? "90%" : "100%",
+          },
+        ]}
         placeholder="Search movie.."
         placeholderTextColor="gray"
         keyboardType="default"
         onChangeText={onChange}
       />
       <EvilIcons
-        style={styles.searchIcon}
+        style={[
+          styles.searchIcon,
+          {
+            right: inSearch ? "10%" : "5%",
+          },
+        ]}
         name="search"
         size={24}
         color="gray"
@@ -31,7 +46,6 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   headerSearchBtn: {
-    width: "90%",
     marginHorizontal: "auto",
     flexDirection: "row",
     justifyContent: "space-between",
@@ -45,7 +59,6 @@ const styles = StyleSheet.create({
   searchIcon: {
     color: "gray",
     position: "absolute",
-    right: "10%",
     bottom: 10,
   },
   headerSearchBtnPlaceholder: {

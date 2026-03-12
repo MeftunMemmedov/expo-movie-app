@@ -1,6 +1,5 @@
 import { Movie, StackParams } from "@/types";
 import {
-  NavigationProp,
   useNavigation,
   useRoute,
 } from "@react-navigation/native";

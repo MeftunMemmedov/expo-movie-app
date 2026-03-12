@@ -1,5 +1,12 @@
 import { main_red, secondary_black } from "@/constants/colors";
-import { View, Text, StyleSheet, Pressable, Dimensions } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Pressable,
+  Dimensions,
+  ActivityIndicator,
+} from "react-native";
 import Input from "../components/Input";
 import { Dispatch, SetStateAction, useState } from "react";
 import { RegisterFormData, registerSchema } from "@/schemas/register.schema";
@@ -131,7 +138,11 @@ const Register = ({
           onPress={handleSubmit(onSubmit)}
         >
           <Text style={styles.submitBtnText}>
-            {isLoading || isSubmitting ? "Loading" : "Sign Up"}
+            {isLoading || isSubmitting ? (
+              <ActivityIndicator size={10} color={"white"} />
+            ) : (
+              "Sign Up"
+            )}
           </Text>
         </Pressable>
         <View style={styles.textContainer}>

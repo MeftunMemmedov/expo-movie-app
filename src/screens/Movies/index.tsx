@@ -1,10 +1,8 @@
 import { getDataList } from "@/api/helpers";
 import Container from "../../components/Container";
 import MovieSlider from "@/components/MovieSlider";
-import { MOVIES } from "@/data/movie";
 import { Movie } from "@/types";
 import { useEffect, useState } from "react";
-import { Text, View } from "react-native";
 import LoadingSpinner from "@/components/LoadingSpinner";
 
 const Movies = () => {

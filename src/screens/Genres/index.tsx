@@ -1,8 +1,5 @@
 import Container from "@/components/Container";
-import MovieSlider from "@/components/MovieSlider";
 import { secondary_black } from "@/constants/colors";
-import { GENRES } from "@/data/genre";
-import { MOVIES } from "@/data/movie";
 import { getDevice } from "@/helpers/common";
 import { useAppSelector } from "@/store/hooks";
 import { Genre, GenreStackParams } from "@/types";

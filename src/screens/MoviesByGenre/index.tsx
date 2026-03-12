@@ -1,15 +1,12 @@
 import { getDataList } from "@/api/helpers";
 import Container from "@/components/Container";
 import LoadingSpinner from "@/components/LoadingSpinner";
-import MovieCard from "@/components/MovieCard";
 import MovieList from "@/components/MovieList";
-import { GENRES } from "@/data/genre";
-import { MOVIES } from "@/data/movie";
 import { useAppSelector } from "@/store/hooks";
 import { GenreStackParams, Movie } from "@/types";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useEffect, useState } from "react";
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import { StyleSheet } from "react-native";
 
 const MoviesByGenre = ({
   route,

@@ -1,7 +1,6 @@
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import Container from "@/components/Container";
 import { Picker } from "@react-native-picker/picker";
-import { GENRES } from "@/data/genre";
 import SearchInput from "@/components/SearchInput";
 import MovieList from "@/components/MovieList";
 import { useEffect, useState } from "react";
@@ -100,6 +99,7 @@ const AllMovies = () => {
       ) : (
         <View>
           <SearchInput
+            inSearch={false}
             onChange={(text) => {
               setSearchInput(text);
             }}

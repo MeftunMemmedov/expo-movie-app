@@ -3,7 +3,6 @@ import Container from "@/components/Container";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import SearchInput from "@/components/SearchInput";
 import { main_black } from "@/constants/colors";
-import { MOVIES } from "@/data/movie";
 import { Movie, StackParams } from "@/types";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
@@ -55,6 +54,7 @@ const Search = () => {
     <View style={{ backgroundColor: main_black }}>
       <View>
         <SearchInput
+          inSearch
           onChange={(text) => {
             setStatus("loading");
             setSearchInput(text);

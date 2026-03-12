@@ -28,13 +28,9 @@ const WatchlistBtn = ({ movieId }: { movieId: string }) => {
       style={styles.movieActionBtn}
       onPress={() => toggleWatchlist(movieId, user.id)}
     >
-      {isWatchlistActionLoading ? (
-        <ActivityIndicator size={10} color={"black"} />
-      ) : (
-        <Text style={styles.movieActionBtnText}>
-          {isMovInWatchlist ? "Remove from Watchlist" : "Add to Watchlist"}
-        </Text>
-      )}
+      <Text style={styles.movieActionBtnText}>
+        {isMovInWatchlist ? "Remove from Watchlist" : "Add to Watchlist"}
+      </Text>
     </Pressable>
   );
 };

@@ -1,7 +1,6 @@
 import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Cast, Movie, MovieStackParams } from "@/types";
-import { MOVIES } from "@/data/movie";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import Container from "@/components/Container";
