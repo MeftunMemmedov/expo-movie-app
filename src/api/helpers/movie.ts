@@ -19,6 +19,5 @@ export const getMovieDetails = async (
     genres: `cs.{${movie.genres.slice(0, 2).join(",")}}`,
     slug: `neq.${slug}`,
   });
-  console.log(movie.genres.join(" , "));
   return { movie, cast, relatedMovies };
 };

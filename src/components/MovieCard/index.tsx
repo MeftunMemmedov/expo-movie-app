@@ -1,5 +1,10 @@
 import { Movie, StackParams } from "@/types";
-import { NavigationProp, useNavigation } from "@react-navigation/native";
+import {
+  NavigationProp,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Image, StyleSheet, DimensionValue, Pressable } from "react-native";
 
 const MovieCard = ({
@@ -11,16 +16,21 @@ const MovieCard = ({
   marginRight?: number;
   width?: DimensionValue;
 }) => {
-  const nav = useNavigation<NavigationProp<StackParams>>();
+  const { name: routeName } = useRoute();
+  const nav = useNavigation<NativeStackNavigationProp<StackParams>>();
   return (
     <Pressable
       style={[styles.movieCard, { marginRight, width }]}
-      onPress={() =>
-      {
-        nav.navigate("MovieDetails", { slug: movie.slug, title: movie.title })
-        console.log("PRESS")
-      }
-      }
+      onPress={() => {
+        if (routeName === "MovieDetails") {
+          nav.push("MovieDetails", { slug: movie.slug, title: movie.title });
+        } else {
+          nav.navigate("MovieDetails", {
+            slug: movie.slug,
+            title: movie.title,
+          });
+        }
+      }}
     >
       <Image source={{ uri: movie.poster }} style={styles.movieCardPoster} />
     </Pressable>

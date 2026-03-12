@@ -38,9 +38,6 @@ const Movies = () => {
     getAllMovies();
   }, []);
 
-  useEffect(()=>{
-    console.log(movieSliderList)
-  },[movieSliderList])
   if (isLoading) return <LoadingSpinner />;
   return (
     <Container scroll>
