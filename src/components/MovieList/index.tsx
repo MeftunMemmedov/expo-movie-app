@@ -1,5 +1,12 @@
 import { Movie } from "@/types";
-import { View, FlatList, StyleSheet, Dimensions, Text } from "react-native";
+import {
+  View,
+  FlatList,
+  StyleSheet,
+  Dimensions,
+  Text,
+  RefreshControl,
+} from "react-native";
 import MovieCard from "../MovieCard";
 import { getDevice } from "@/helpers/common";
 
@@ -7,30 +14,29 @@ const isTablet = getDevice().tablet;
 const columns = isTablet ? 5 : 3;
 const { height } = Dimensions.get("screen");
 
-const MovieList = ({ movies }: { movies: Movie[] }) => {
+interface Props {
+  movies: Movie[];
+  onRefresh?: () => void;
+  isRefreshing?: boolean;
+}
+
+const MovieList = ({ movies, onRefresh, isRefreshing }: Props) => {
   if (movies.length == 0)
     return (
-      <View
-        style={{
-          height: height / 1.5,
-          flexDirection: "row",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Text style={{ color: "white", fontWeight: "bold", fontSize: 18 }}>
-          No movies found
-        </Text>
+      <View style={styles.notFoundMessageContainer}>
+        <Text style={styles.notFoundMessageText}>No movies found</Text>
       </View>
     );
   return (
     <FlatList
-      style={{
-        marginHorizontal: "auto",
-        width: "100%",
-        minHeight: height,
-        marginTop: 20,
-      }}
+      refreshControl={
+        <RefreshControl
+          refreshing={isRefreshing ?? false}
+          onRefresh={onRefresh}
+        />
+      }
+      refreshing={isRefreshing}
+      style={styles.movieList}
       data={movies}
       renderItem={(mov) => (
         <View style={styles.movieCardContainer}>
@@ -46,6 +52,12 @@ const MovieList = ({ movies }: { movies: Movie[] }) => {
 export default MovieList;
 
 const styles = StyleSheet.create({
+  movieList: {
+    marginHorizontal: "auto",
+    width: "100%",
+    minHeight: height,
+    marginTop: 20,
+  },
   movieCardContainer: {
     aspectRatio: "2/3",
     width: `${100 / columns}%`,
@@ -53,4 +65,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  notFoundMessageContainer: {
+    height: height / 1.5,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  notFoundMessageText: { color: "white", fontWeight: "bold", fontSize: 18 },
 });

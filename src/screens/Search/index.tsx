@@ -28,10 +28,15 @@ const Search = () => {
   >("idle");
 
   useEffect(() => {
-    if (searchInput == "") return;
-    setTimeout(() => {
+    if (searchInput == "") {
+      setResults([]);
+      setStatus("idle");
+      return;
+    }
+    const timeOut = setTimeout(() => {
       setDebouncedVal(searchInput);
     }, 500);
+    return () => clearTimeout(timeOut);
   }, [searchInput]);
 
   useEffect(() => {
@@ -62,11 +67,18 @@ const Search = () => {
         />
       </View>
       <Container scroll={false}>
-        {status === "loading" ? (
+        {status === "idle" ? (
+          <View>
+            <Text style={{ color: "gray", textAlign: "center" }}>
+              Type Something
+            </Text>
+          </View>
+        ) : status === "loading" ? (
           <LoadingSpinner />
         ) : results.length > 0 ? (
           <View style={{ minHeight: height, paddingBottom: 100 }}>
             <FlatList
+              keyboardShouldPersistTaps="handled"
               data={results}
               renderItem={(movie) => (
                 <Pressable

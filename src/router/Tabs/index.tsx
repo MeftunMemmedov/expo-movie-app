@@ -4,17 +4,19 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { main_red, secondary_black } from "../../constants/colors";
 import { StyleSheet } from "react-native";
+import { useAppSelector } from "@/store/hooks";
 
 const Tabs = createBottomTabNavigator();
 
 const BottomTabsNavigator = () => {
+  const { isBottomTabVisible } = useAppSelector((store) => store.global);
   return (
     <Tabs.Navigator
       backBehavior="history"
       screenOptions={{
         tabBarShowLabel: false,
         headerShown: false,
-        tabBarStyle: styles.tabbar,
+        tabBarStyle: [tabBarStyle.tabbar],
       }}
     >
       <Tabs.Screen
@@ -75,7 +77,7 @@ const BottomTabsNavigator = () => {
 
 export default BottomTabsNavigator;
 
-export const styles = StyleSheet.create({
+export const tabBarStyle = StyleSheet.create({
   tabbar: {
     backgroundColor: secondary_black,
     paddingTop: 10,

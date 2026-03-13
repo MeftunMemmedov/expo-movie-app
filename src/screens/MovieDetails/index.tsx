@@ -1,4 +1,11 @@
-import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  Animated,
+  Pressable,
+  RefreshControl,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Cast, Movie, MovieStackParams } from "@/types";
 import { Ionicons } from "@expo/vector-icons";
@@ -8,11 +15,14 @@ import { main_red, secondary_black } from "@/constants/colors";
 import MainInfo from "./components/MainInfo";
 import CastSlider from "./components/CastSlider";
 import MovieSlider from "@/components/MovieSlider";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { getMovieDetails } from "@/api/helpers/movie";
 import WatchlistBtn from "./components/WatchlistBtn";
 import TrailerPlayer from "./components/TrailerPlayer";
+import { tabBarStyle } from "@/router/Tabs";
+import NotFound from "@/components/NotFound";
+import ErrorMessage from "@/components/ErrorMessage";
 
 const MovieDetails = ({
   route,
@@ -40,36 +50,57 @@ const MovieDetails = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
 
+  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+
   const [isTrailerPlayerActive, setIsTrailerPlayerActive] =
     useState<boolean>(false);
 
+  const getCurrentMovie = async () => {
+    try {
+      setIsLoading(true);
+      const movieData = await getMovieDetails(slug);
+      if (!movieData) return;
+      const { movie: currentMovie, cast, relatedMovies } = movieData;
+      setMovie(currentMovie);
+      setCast(cast);
+      setRelatedMovies(relatedMovies);
+    } catch (error) {
+      setError("An error occured");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const onRefresh = async () => {
+    setIsRefreshing(true);
+    try {
+      await getCurrentMovie();
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
+
   useEffect(() => {
-    const getCurrentMovie = async () => {
-      try {
-        setIsLoading(true);
-        const movieData = await getMovieDetails(slug);
-        if (!movieData) return;
-        const { movie: currentMovie, cast, relatedMovies } = movieData;
-        setMovie(currentMovie);
-        setCast(cast);
-        setRelatedMovies(relatedMovies);
-      } catch (error) {
-        setError("An error occured");
-      } finally {
-        setIsLoading(false);
-      }
-    };
     getCurrentMovie();
   }, []);
 
+  useEffect(() => {
+    nav.getParent()?.setOptions({
+      tabBarStyle: { display: "none" },
+    });
+
+    return () => {
+      nav.getParent()?.setOptions({
+        tabBarStyle: tabBarStyle.tabbar,
+      });
+    };
+  }, [nav]);
+
   if (isLoading) return <LoadingSpinner />;
 
-  if (!movie)
-    return (
-      <View>
-        <Text>Movie not found!</Text>
-      </View>
-    );
+  if (!movie) return <NotFound text="Movie not found!" />;
+  if (error) return <ErrorMessage text={error} />;
+  // console.log(movie)
   return (
     <>
       <Animated.View
@@ -93,6 +124,9 @@ const MovieDetails = ({
         <View style={{ flex: 3 }}></View>
       </Animated.View>
       <Animated.ScrollView
+        refreshControl={
+          <RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />
+        }
         onScroll={Animated.event(
           [{ nativeEvent: { contentOffset: { y: scrollY } } }],
           { useNativeDriver: false },
@@ -100,9 +134,37 @@ const MovieDetails = ({
       >
         <MainInfo movie={movie} />
         <Container scroll={false}>
+          <View
+            style={{
+              backgroundColor: secondary_black,
+              aspectRatio: "1/1",
+              width: 60,
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              borderRadius: 10,
+            }}
+          >
+            <Text style={{ fontSize: 20, color: "gray" }}>
+              {movie.age_rating}
+            </Text>
+          </View>
           <View style={styles.movieDetailsInfoDescriptionContainer}>
             <Text style={styles.movieDetailsInfoDescription}>
               {movie.description}
+            </Text>
+          </View>
+          <View style={styles.movieDirectorContainer}>
+            <Text
+              style={[
+                styles.movieDirectorText,
+                {
+                  fontSize: movie.director.fullName.length > 10 ? 15 : 20,
+                },
+              ]}
+            >
+              Directed by{" "}
+              <Text style={{ color: "white" }}>{movie.director.fullName}</Text>
             </Text>
           </View>
           <View style={styles.movieActionBtnsContainer}>
@@ -138,7 +200,7 @@ const MovieDetails = ({
               </Text>
             </View> */}
           </View>
-          {cast.length && <CastSlider cast={cast} />}
+          {cast.length > 0 && <CastSlider cast={cast} />}
           <MovieSlider movies={relatedMovies} title="Recommended" />
         </Container>
       </Animated.ScrollView>
@@ -175,6 +237,7 @@ const styles = StyleSheet.create({
     backgroundColor: secondary_black,
     padding: 20,
     borderRadius: 10,
+    marginVertical: 10,
   },
   movieDetailsInfoDescription: { color: "white", lineHeight: 20 },
   movieActionBtnsContainer: {
@@ -195,6 +258,17 @@ const styles = StyleSheet.create({
     color: "white",
     textAlign: "center",
     fontWeight: 700,
+  },
+  movieDirectorContainer: {
+    backgroundColor: secondary_black,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 10,
+    paddingVertical: 15,
+  },
+  movieDirectorText: {
+    color: "gray",
   },
   movieDetailsAdditionalInfoList: {
     flexDirection: "column",

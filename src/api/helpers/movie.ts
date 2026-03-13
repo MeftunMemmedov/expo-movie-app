@@ -6,7 +6,7 @@ export const getMovieDetails = async (
 ): Promise<{ movie: Movie; cast: Cast[]; relatedMovies: Movie[] } | void> => {
   const movie = await getData<Movie>("mov_movies", {
     slug: `eq.${slug}`,
-    select: "*,director(*)",
+    select: "*,director(fullName,id,image)",
   });
 
   if (!movie) return;

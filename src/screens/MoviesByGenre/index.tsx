@@ -1,5 +1,6 @@
 import { getDataList } from "@/api/helpers";
 import Container from "@/components/Container";
+import ErrorMessage from "@/components/ErrorMessage";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import MovieList from "@/components/MovieList";
 import { useAppSelector } from "@/store/hooks";
@@ -20,25 +21,46 @@ const MoviesByGenre = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
 
+  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+
+  const getMoviesByGenre = async () => {
+    try {
+      setIsLoading(true);
+      const moviesByGenre = await getDataList<Movie>("mov_movies", {
+        genres: `cs.{${currentGenre?.title}}`,
+      });
+      setMovies(moviesByGenre);
+    } catch {
+      setError("An error occured");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const onRefresh = async () => {
+    setIsRefreshing(true);
+    try {
+      await getMoviesByGenre();
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
   useEffect(() => {
-    const getMoviesByGenre = async () => {
-      try {
-        setIsLoading(true);
-        const moviesByGenre = await getDataList<Movie>("mov_movies", {
-          genres: `cs.{${currentGenre?.title}}`,
-        });
-        setMovies(moviesByGenre);
-      } catch {
-        setError("An error occured");
-      } finally {
-        setIsLoading(false);
-      }
-    };
     getMoviesByGenre();
   }, []);
+
+  if (error) return <ErrorMessage text={error} />;
   return (
     <Container scroll={false}>
-      {isLoading ? <LoadingSpinner /> : <MovieList movies={movies} />}
+      {isLoading ? (
+        <LoadingSpinner />
+      ) : (
+        <MovieList
+          isRefreshing={isRefreshing}
+          onRefresh={onRefresh}
+          movies={movies}
+        />
+      )}
     </Container>
   );
 };
