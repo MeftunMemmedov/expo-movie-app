@@ -113,7 +113,7 @@ const MovieDetails = ({
             style={{
               opacity: titleOpacity,
               color: "white",
-              fontSize: 15,
+              fontSize: movie.title.length > 15 ? 10 : 15,
               fontWeight: "bold",
             }}
           >
@@ -220,7 +220,7 @@ const styles = StyleSheet.create({
   },
   headerBackLeft: { flex: 3 },
   headerTitleContainer: {
-    flex: 3,
+    flex: 4,
     flexDirection: "row",
     justifyContent: "center",
   },
