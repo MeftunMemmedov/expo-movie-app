@@ -100,7 +100,6 @@ const MovieDetails = ({
 
   if (!movie) return <NotFound text="Movie not found!" />;
   if (error) return <ErrorMessage text={error} />;
-  // console.log(movie)
   return (
     <>
       <Animated.View
@@ -134,17 +133,7 @@ const MovieDetails = ({
       >
         <MainInfo movie={movie} />
         <Container scroll={false}>
-          <View
-            style={{
-              backgroundColor: secondary_black,
-              aspectRatio: "1/1",
-              width: 60,
-              flexDirection: "row",
-              justifyContent: "center",
-              alignItems: "center",
-              borderRadius: 10,
-            }}
-          >
+          <View style={styles.movieAgeRatingContainer}>
             <Text style={{ fontSize: 20, color: "gray" }}>
               {movie.age_rating}
             </Text>
@@ -154,19 +143,23 @@ const MovieDetails = ({
               {movie.description}
             </Text>
           </View>
-          <View style={styles.movieDirectorContainer}>
-            <Text
-              style={[
-                styles.movieDirectorText,
-                {
-                  fontSize: movie.director.fullName.length > 10 ? 15 : 20,
-                },
-              ]}
-            >
-              Directed by{" "}
-              <Text style={{ color: "white" }}>{movie.director.fullName}</Text>
-            </Text>
-          </View>
+          {movie.director && (
+            <View style={styles.movieDirectorContainer}>
+              <Text
+                style={[
+                  styles.movieDirectorText,
+                  {
+                    fontSize: movie.director?.fullName.length > 10 ? 15 : 20,
+                  },
+                ]}
+              >
+                Directed by{" "}
+                <Text style={{ color: "white" }}>
+                  {movie.director.fullName}
+                </Text>
+              </Text>
+            </View>
+          )}
           <View style={styles.movieActionBtnsContainer}>
             <WatchlistBtn movieId={movie.id} />
             <Pressable
@@ -232,7 +225,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   headerTitle: {},
-
+  movieAgeRatingContainer: {
+    backgroundColor: secondary_black,
+    alignSelf: "flex-start",
+    padding: 20,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 10,
+  },
   movieDetailsInfoDescriptionContainer: {
     backgroundColor: secondary_black,
     padding: 20,
