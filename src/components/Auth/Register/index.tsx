@@ -125,7 +125,7 @@ const Register = ({
           name="password"
           render={({ field: { onChange, value } }) => (
             <>
-              <Input name="Passwrd" value={value} onChange={onChange} />
+              <Input name="Password" value={value} onChange={onChange} />
               {errors.password && (
                 <Text style={{ color: "red" }}>{errors.password.message}</Text>
               )}

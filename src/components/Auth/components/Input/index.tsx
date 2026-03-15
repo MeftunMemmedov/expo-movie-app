@@ -13,9 +13,11 @@ const Input = ({ name, value, onChange }: Props) => {
       <Text style={styles.inputTitle}>{name}</Text>
       <TextInput
         style={styles.input}
+        value={value}
         placeholderTextColor={"gray"}
         placeholder={`Enter your ${name}`}
         onChangeText={onChange}
+        secureTextEntry={name === "Password"}
       />
     </View>
   );
@@ -24,12 +26,12 @@ const Input = ({ name, value, onChange }: Props) => {
 export default Input;
 
 const styles = StyleSheet.create({
-  inputContainer: { },
+  inputContainer: {},
   inputTitle: { color: "white", marginBottom: 10 },
   input: {
     backgroundColor: secondary_black,
     borderRadius: 10,
     paddingHorizontal: 20,
-    color:"white"
+    color: "white",
   },
 });

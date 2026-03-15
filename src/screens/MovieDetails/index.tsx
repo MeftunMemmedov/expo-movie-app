@@ -113,7 +113,7 @@ const MovieDetails = ({
             style={{
               opacity: titleOpacity,
               color: "white",
-              fontSize: movie.title.length > 15 ? 10 : 15,
+              fontSize: movie.title.length > 15 ? 12 : 15,
               fontWeight: "bold",
             }}
           >
@@ -220,9 +220,11 @@ const styles = StyleSheet.create({
   },
   headerBackLeft: { flex: 3 },
   headerTitleContainer: {
-    flex: 4,
+    flex: 6,
     flexDirection: "row",
     justifyContent: "center",
+    alignItems: "center",
+    height: "40%",
   },
   headerTitle: {},
   movieAgeRatingContainer: {
