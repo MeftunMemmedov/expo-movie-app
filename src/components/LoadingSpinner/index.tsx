@@ -4,7 +4,7 @@ const { height } = Dimensions.get("screen");
 
 const LoadingSpinner = () => {
   return (
-    <View style={{ paddingVertical: 100, height, backgroundColor: main_black }}>
+    <View style={styles.loadingContainer}>
       <ActivityIndicator size={80} color={main_red} />
     </View>
   );
@@ -12,4 +12,10 @@ const LoadingSpinner = () => {
 
 export default LoadingSpinner;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  loadingContainer: {
+    paddingVertical: 200,
+    height,
+    backgroundColor: main_black,
+  },
+});
