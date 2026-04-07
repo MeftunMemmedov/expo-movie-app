@@ -6,7 +6,7 @@ import {
   StyleSheet,
   View,
   ViewStyle,
-  useWindowDimensions
+  useWindowDimensions,
 } from "react-native";
 
 interface Props {
@@ -28,7 +28,7 @@ export default function Container({ children, scroll = true }: Props) {
 
   const containerStyles: StyleProp<ViewStyle> = [
     styles.container,
-    { maxWidth: getMaxWidth(), minHeight: "auto", width: "100%" },
+    { maxWidth: getMaxWidth(), width: "100%" },
   ];
 
   return (
@@ -36,7 +36,7 @@ export default function Container({ children, scroll = true }: Props) {
       {scroll ? (
         <ScrollView
           style={containerStyles}
-          contentContainerStyle={{ paddingBottom: 100 }}
+          contentContainerStyle={{ paddingBottom: 300 }}
           showsVerticalScrollIndicator={false}
         >
           {children}

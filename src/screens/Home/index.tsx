@@ -66,6 +66,7 @@ const HomeScreen = () => {
           `home-screen-${content.title}-${index}-movies`
         }
         refreshing={status === "refresing"}
+        showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl
             refreshing={status === "refresing"}

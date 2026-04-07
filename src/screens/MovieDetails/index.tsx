@@ -96,7 +96,7 @@ const MovieDetailsScreen = () => {
         )}
       >
         <MainInfo movie={movie} />
-        <Container scroll={false}>
+        <Container scroll>
           <View style={styles.movieAgeRatingContainer}>
             <Text style={{ fontSize: 20, color: "gray" }}>
               {movie.age_rating}

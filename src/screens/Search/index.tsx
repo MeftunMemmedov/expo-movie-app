@@ -57,7 +57,7 @@ const SearchScreen = () => {
     getResults();
   }, [debouncedVal]);
   return (
-    <View style={{ backgroundColor: main_black }}>
+    <View style={{ backgroundColor: main_black, flex: 1 }}>
       <View>
         <SearchInput
           value={searchInputValue}
@@ -109,7 +109,7 @@ const SearchScreen = () => {
                       <Text
                         style={[
                           styles.resultTitle,
-                          { fontSize: movie.item.title.length > 22 ? 12 : 14 },
+                          { fontSize: movie.item.title.length > 22 ? 14 : 18 },
                         ]}
                       >
                         {movie.item.title}
@@ -152,14 +152,20 @@ const styles = StyleSheet.create({
   },
   resultImage: { width: "10%", borderRadius: 5, aspectRatio: "2/3" },
   resultMainInfoContainer: {
-    width: "60%",
+    width: "70%",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
   },
-  resultTitle: { color: "white", textAlign: "left", paddingLeft: 10 },
+  resultTitle: {
+    color: "white",
+    textAlign: "left",
+    paddingLeft: 10,
+    fontWeight: "semibold",
+    wordWrap: "wrap",
+  },
   resultAgerating: { color: "gray" },
-  resultAdditionalInfoContainer: { width: "30%" },
+  resultAdditionalInfoContainer: { width: "20%" },
   resultAdditionalInfoYear: { color: "white", textAlign: "right" },
   resultAdditionalInfoRating: { color: "gold", textAlign: "right" },
   notFoundContainer: {

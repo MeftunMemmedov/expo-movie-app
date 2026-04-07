@@ -11,8 +11,6 @@ export const getDevice = () => {
     mobile: false,
   };
 
-  //   if (width >= 1200) return 1140;
-  //   if (width >= 992) return 960;
   if (width >= 768) devices.tablet = true;
   if (width >= 576) devices.mobile = true;
 

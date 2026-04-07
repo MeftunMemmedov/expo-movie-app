@@ -14,6 +14,7 @@ const GenresScreen = () => {
       <FlatList
         scrollEnabled={false}
         data={genres}
+        showsVerticalScrollIndicator={false}
         renderItem={(genre) => (
           <GenreCard columns={columns} genre={genre.item} />
         )}
