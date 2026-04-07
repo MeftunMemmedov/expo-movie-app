@@ -2,16 +2,15 @@ import axiosInstance from "..";
 
 export const getDataList = async <T>(
   table_name: string,
-  params?: Record<string, string | number | undefined>
+  params?: Record<string, string | number | undefined>,
 ) => {
   const { data } = await axiosInstance.get(`/${table_name}`, { params });
-
   return data as T[];
 };
 
 export const getData = async <T>(
   table_name: string,
-  params: Record<string, string | number | undefined>
+  params: Record<string, string | number | undefined>,
 ) => {
   const { data } = await axiosInstance.get(`/${table_name}`, { params });
 
@@ -26,7 +25,7 @@ export const createNewData = async <T>(table_name: string, data: T) => {
 
 export const deleteData = async (
   table_name: string,
-  params: Record<string, string | number | undefined>
+  params: Record<string, string | number | undefined>,
 ) => {
   await axiosInstance
     .delete(`/${table_name}`, { params })

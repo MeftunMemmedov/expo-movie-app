@@ -4,14 +4,10 @@ import { Stack } from "expo-router";
 import "react-native-reanimated";
 import { Provider } from "react-redux";
 
-export const unstable_settings = {
-  anchor: "(tabs)",
-};
-
 export default function RootLayout() {
   return (
     <Provider store={store}>
-      <Stack screenOptions={{ headerShown: false }}>
+      <Stack initialRouteName="(tabs)" screenOptions={{ headerShown: false }}>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen
           name="movies/[slug]"

@@ -5,23 +5,23 @@ import LoadingSpinner from "@/components/LoadingSpinner";
 import MovieSlider from "@/components/MovieSlider";
 import NotFound from "@/components/NotFound";
 import { main_red, secondary_black } from "@/constants/colors";
-import { Cast, Movie } from "@/types";
 import { Ionicons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import {
-    Animated,
-    Pressable,
-    RefreshControl,
-    StyleSheet,
-    Text,
-    View,
+  Animated,
+  Pressable,
+  RefreshControl,
+  StyleSheet,
+  Text,
+  View,
 } from "react-native";
+import useSWR from "swr";
 import {
-    CastSlider,
-    MainInfo,
-    TrailerPlayer,
-    WatchlistBtn,
+  CastSlider,
+  MainInfo,
+  TrailerPlayer,
+  WatchlistBtn,
 } from "./components";
 
 const MovieDetailsScreen = () => {
@@ -41,62 +41,29 @@ const MovieDetailsScreen = () => {
     extrapolate: "clamp",
   });
 
-  const [movie, setMovie] = useState<Movie | null>(null);
-  const [relatedMovies, setRelatedMovies] = useState<Movie[]>([]);
-  const [cast, setCast] = useState<Cast[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>("");
-
-  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
-
   const [isTrailerPlayerActive, setIsTrailerPlayerActive] =
     useState<boolean>(false);
 
-  const getCurrentMovie = async () => {
-    try {
-      setIsLoading(true);
-      const movieData = await getMovieDetails(slug);
-      if (!movieData) return;
-      const { movie: currentMovie, cast, relatedMovies } = movieData;
-      setMovie(currentMovie);
-      setCast(cast);
-      setRelatedMovies(relatedMovies);
-    } catch (error) {
-      setError("An error occured");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const { data, isLoading, isValidating, error, mutate } = useSWR(
+    slug ? `movie/${slug}` : null,
+    () => getMovieDetails(slug),
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      revalidateIfStale: false,
+    },
+  );
 
   const onRefresh = async () => {
-    setIsRefreshing(true);
-    try {
-      await getCurrentMovie();
-    } finally {
-      setIsRefreshing(false);
-    }
+    await mutate();
   };
 
-  useEffect(() => {
-    getCurrentMovie();
-  }, []);
-
-  //   useEffect(() => {
-  //     nav.getParent()?.setOptions({
-  //       tabBarStyle: { display: "none" },
-  //     });
-
-  //     return () => {
-  //       nav.getParent()?.setOptions({
-  //         tabBarStyle: tabBarStyle.tabbar,
-  //       });
-  //     };
-  //   }, [nav]);
-
   if (isLoading) return <LoadingSpinner />;
+  if (error || !data) return <ErrorMessage text={error} />;
+
+  const { cast, movie, relatedMovies } = data;
 
   if (!movie) return <NotFound text="Movie not found!" />;
-  if (error) return <ErrorMessage text={error} />;
   return (
     <>
       <Animated.View
@@ -121,7 +88,7 @@ const MovieDetailsScreen = () => {
       </Animated.View>
       <Animated.ScrollView
         refreshControl={
-          <RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />
+          <RefreshControl refreshing={isValidating} onRefresh={onRefresh} />
         }
         onScroll={Animated.event(
           [{ nativeEvent: { contentOffset: { y: scrollY } } }],

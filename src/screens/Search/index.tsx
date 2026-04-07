@@ -7,13 +7,13 @@ import { Movie } from "@/types";
 import { Link } from "expo-router";
 import { useEffect, useState } from "react";
 import {
-    Dimensions,
-    FlatList,
-    Image,
-    Pressable,
-    StyleSheet,
-    Text,
-    View,
+  Dimensions,
+  FlatList,
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
 } from "react-native";
 
 const { height } = Dimensions.get("screen");
@@ -70,7 +70,7 @@ const SearchScreen = () => {
       </View>
       <Container scroll={false}>
         {searchInputValue.length > 0 && (
-          <View>
+          <View style={styles.allResultsForLinkContainer}>
             <Link
               asChild
               href={{
@@ -78,7 +78,7 @@ const SearchScreen = () => {
                 params: { q: searchInputValue },
               }}
             >
-              <Text style={{ color: "gray", textAlign: "center" }}>
+              <Text style={styles.allResultsForLinkText}>
                 All results for{" "}
                 <Text style={{ color: "white" }}>{searchInputValue}</Text>
               </Text>
@@ -169,4 +169,6 @@ const styles = StyleSheet.create({
     height: 100,
   },
   notFoundText: { fontSize: 20, color: "white", fontWeight: "bold" },
+  allResultsForLinkContainer: { marginBottom: 10 },
+  allResultsForLinkText: { color: "gray", textAlign: "center" },
 });

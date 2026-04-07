@@ -11,13 +11,18 @@ export const getMovieDetails = async (
 
   if (!movie) return;
 
-  const cast = await getDataList<Cast>("mov_cast", {
+  const fetchCast = getDataList<Cast>("mov_cast", {
     movie_id: `eq.${movie.id}`,
     select: "*,actor:artist_id(*)",
   });
-  const relatedMovies = await getDataList<Movie>("mov_movies", {
+  const fetchRelatedMovies = getDataList<Movie>("mov_movies", {
     genres: `cs.{${movie.genres.slice(0, 2).join(",")}}`,
     slug: `neq.${slug}`,
   });
+
+  const [cast, relatedMovies] = await Promise.all([
+    fetchCast,
+    fetchRelatedMovies,
+  ]);
   return { movie, cast, relatedMovies };
 };

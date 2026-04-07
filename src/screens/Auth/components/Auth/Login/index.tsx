@@ -1,26 +1,23 @@
-import { main_red, secondary_black } from "@/constants/colors";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  Pressable,
-  Dimensions,
-  ActivityIndicator,
-} from "react-native";
-import Input from "../components/Input";
-import { Dispatch, SetStateAction } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { LoginFormData, loginSchema } from "@/schemas/login.schema";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "@/api/helpers/auth";
-import { AxiosError } from "axios";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { main_red } from "@/constants/colors";
+import { LoginFormData, loginSchema } from "@/schemas/login.schema";
 import { getAuthState } from "@/store/global/actions";
 import { useAppDispatch } from "@/store/hooks";
-import { NavigationProp, useNavigation } from "@react-navigation/native";
-// import { MovieStackParams } from "@/types";
-
+import { zodResolver } from "@hookform/resolvers/zod";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AxiosError } from "axios";
+import { router } from "expo-router";
+import { Dispatch, SetStateAction } from "react";
+import { Controller, useForm } from "react-hook-form";
+import {
+  ActivityIndicator,
+  Dimensions,
+  Pressable,
+  StyleSheet,
+  Text,
+  View
+} from "react-native";
+import Input from "../components/Input";
 
 const { height } = Dimensions.get("screen");
 const Login = ({
@@ -28,7 +25,6 @@ const Login = ({
 }: {
   setCurrentForm: Dispatch<SetStateAction<"login" | "register">>;
 }) => {
-  const nav = useNavigation<NavigationProp<any>>();
   const dispatch = useAppDispatch();
   const {
     control,
@@ -53,7 +49,7 @@ const Login = ({
         }),
       );
       dispatch(getAuthState(tokens?.access_token));
-      nav.navigate("MovieStack");
+      router.push("/");
     } catch (error) {
       if (error instanceof AxiosError) {
         const message = error?.response?.data.msg || "Login failed";

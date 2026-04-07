@@ -1,6 +1,11 @@
 import Header from "@/components/Header";
 import { main_red, secondary_black } from "@/constants/colors";
-import { getGenreList, getWatchlist } from "@/store/global/actions";
+import { getAuth } from "@/helpers/auth";
+import {
+  getAuthState,
+  getGenreList,
+  getWatchlist,
+} from "@/store/global/actions";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
@@ -11,11 +16,11 @@ const TabsLayout = () => {
   const dispatch = useAppDispatch();
   const { genres, user, watchlist } = useAppSelector((store) => store.global);
 
-  // const checkAuthStateandGet = async () => {
-  //   const auth = await getAuth();
-  //   if (!auth && !auth?.access) return;
-  //   dispatch(getAuthState(auth?.access));
-  // };
+  const checkAuthStateandGet = async () => {
+    const auth = await getAuth();
+    if (!auth && !auth?.access) return;
+    dispatch(getAuthState(auth?.access));
+  };
 
   useEffect(() => {
     if (genres == null) {
@@ -23,11 +28,11 @@ const TabsLayout = () => {
     }
   }, [genres]);
 
-  // useEffect(() => {
-  //   if (user == null) {
-  //     checkAuthStateandGet();
-  //   }
-  // }, [user]);
+  useEffect(() => {
+    if (user == null) {
+      checkAuthStateandGet();
+    }
+  }, [user]);
 
   useEffect(() => {
     if (watchlist == null && user) {
@@ -43,7 +48,7 @@ const TabsLayout = () => {
       }}
     >
       <Tabs.Screen
-        name="home/index"
+        name="index"
         options={{
           title: "home",
           header: () => <Header type="search" />,

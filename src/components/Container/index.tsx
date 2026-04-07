@@ -1,12 +1,12 @@
 import { main_black } from "@/constants/colors";
 import { ReactNode } from "react";
 import {
-  View,
-  useWindowDimensions,
-  StyleSheet,
   ScrollView,
   StyleProp,
+  StyleSheet,
+  View,
   ViewStyle,
+  useWindowDimensions,
 } from "react-native";
 
 interface Props {
@@ -28,7 +28,7 @@ export default function Container({ children, scroll = true }: Props) {
 
   const containerStyles: StyleProp<ViewStyle> = [
     styles.container,
-    { maxWidth: getMaxWidth(), minHeight: "100%", width: "100%" },
+    { maxWidth: getMaxWidth(), minHeight: height, width: "100%" },
   ];
 
   return (
